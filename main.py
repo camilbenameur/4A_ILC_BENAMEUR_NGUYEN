@@ -31,7 +31,7 @@ def operation():
     random_uuid = uuid.uuid4()
     r.set(str(random_uuid), result)
     
-    return jsonify({'message': f'Operation performed. The key is {random_uuid}'}), 201
+    return jsonify({random_uuid}), 201
 
 
 
