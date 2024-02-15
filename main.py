@@ -1,11 +1,24 @@
 from flask import Flask, request, jsonify
 import csv
 from datetime import datetime, timedelta
-app = Flask(__name__)
+import redis
 
 
-events_db = []
+r = redis.Redis(host='localhost', port=6379, db=0)
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+# Ajout de variable
+r.set('0', '2')                 # Retourne True si réussite
+
+# Lecture de 
+value = r.get('0')                        # Retourne la value de foo
+print(value)
+
+
+# app = Flask(__name__)
+
+
+# events_db = []
+
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5000)
 
