@@ -36,5 +36,15 @@ def operation():
     
     return jsonify({"message": "Calculation request sent to RabbitMQ", "id": request_id}), 201
 
+@app.route('/operation', methods=['GET'])
+def get_result_from_id():
+    id = request.args.get('id')
+    operation_result = r.get(id)
+    if operation_result:
+        return jsonify({"result": float(operation_result)})  # Ensure result is converted to float before returning
+    else:
+        return "Event not found", 404
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
