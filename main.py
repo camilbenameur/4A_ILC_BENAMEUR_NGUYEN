@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify
-import redis
-import uuid
+import pika
 import json
+import uuid
 
 app = Flask(__name__)
-r = redis.Redis(host='localhost', port=6379, db=0)
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+
+channel.queue_declare(queue='calcul_queue')
 
 @app.route('/operation', methods=['POST'])
 def operation():
@@ -13,33 +16,20 @@ def operation():
     first_nb = float(data.get("0"))
     operation = data.get("1")
     second_nb = float(data.get("2"))
-
-    if operation == "+":
-        result = first_nb + second_nb
-    elif operation == "-":
-        result = first_nb - second_nb
-    elif operation == "*":
-        result = first_nb * second_nb
-    elif operation == "/":
-        result = first_nb / second_nb
     
-    random_uuid = uuid.uuid4()
-    r.set(str(random_uuid), result)
+    # Generate a UUID for the calculation request
+    request_id = str(uuid.uuid4())
     
-    return jsonify({"id": str(random_uuid)}), 201  # Convert UUID to string before returning in JSON
-
-@app.route('/')
-def home():
-    return "Bienvenue !"
-
-@app.route('/operation', methods=['GET'])
-def get_result_from_id():
-    id = request.args.get('id')
-    operation_result = r.get(id)
-    if operation_result:
-        return jsonify({"result": float(operation_result)})  # Ensure result is converted to float before returning
-    else:
-        return "Event not found", 404
+    # Send the calculation request along with the UUID to RabbitMQ
+    message = {
+        "id": request_id,
+        "operation": f"{first_nb}{operation}{second_nb}"
+    }
+    channel.basic_publish(exchange='',
+                          routing_key='calcul_queue',
+                          body=json.dumps(message))
+    
+    return jsonify({"message": "Calculation request sent to RabbitMQ", "id": request_id}), 201
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
