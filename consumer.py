@@ -1,6 +1,8 @@
 import pika
 import json
+import redis
 
+r = redis.Redis(host='localhost', port=6379, db=0)
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
@@ -11,7 +13,22 @@ def callback(ch, method, properties, body):
     message = json.loads(body)
     request_id = message["id"]
     operation = message["operation"]
-    
+
+    first_nb, operator, second_nb = operation.split()
+    first_nb = float(first_nb)
+    second_nb = float(second_nb)
+
+    if operator == "+":
+        result = first_nb + second_nb
+    elif operator == "-":
+        result = first_nb - second_nb
+    elif operator == "*":
+        result = first_nb * second_nb
+    elif operator == "/":
+        result = first_nb / second_nb
+
+    r.set(str(request_id), result)
+
     print(f"Processing calculation with ID {request_id} and operation {operation}")
 
 channel.basic_consume(queue='calcul_queue',

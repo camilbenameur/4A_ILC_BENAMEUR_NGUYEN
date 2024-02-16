@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify
 import pika
 import json
 import uuid
+import redis
+
 
 app = Flask(__name__)
+r = redis.Redis(host='localhost', port=6379, db=0)
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
@@ -22,9 +25,11 @@ def operation():
     
     # Send the calculation request along with the UUID to RabbitMQ
     message = {
-        "id": request_id,
-        "operation": f"{first_nb}{operation}{second_nb}"
-    }
+    "id": request_id,
+    "operation": f"{first_nb} {operation} {second_nb}"  # Add spaces between operands and operator
+}
+
+    
     channel.basic_publish(exchange='',
                           routing_key='calcul_queue',
                           body=json.dumps(message))
