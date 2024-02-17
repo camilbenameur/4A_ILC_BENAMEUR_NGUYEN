@@ -17,12 +17,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Set NPM_CONFIG_CACHE
+      run: export NPM_CONFIG_CACHE=$(npm config get cache)
+      working-directory: project/frontend/vite-project
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        working-directory: project/frontend/vite-project
+
+    # Continue with the rest of the workflow
     - run: npm ci
+      working-directory: project/frontend/vite-project
     - run: npm run build --if-present
+      working-directory: project/frontend/vite-project
     - run: npm test
+      working-directory: project/frontend/vite-project
