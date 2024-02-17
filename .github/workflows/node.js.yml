@@ -13,19 +13,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [10.2.4]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        path: project/frontend/vite-project  # Set the path to the Vite project
-
+        path: project/frontend/vite-project
+        
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
       
-    - run: npm ci --prefix project/frontend/vite-project  # Specify the lock file path
-    - run: npm run dev --prefix project/frontend/vite-project  # Run the development server
+    - run: npm ci
+    - run: npm run dev
