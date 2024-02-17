@@ -26,7 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        working-directory: project/frontend/vite-project  # Set the working directory to the Vite project
-
-    - run: npm ci
-    - run: npm run dev
+      
+    - run: npm ci --prefix project/frontend/vite-project  # Specify the lock file path
+    - run: npm run dev --prefix project/frontend/vite-project  # Run the development server
