@@ -27,9 +27,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    # Continue with the rest of the workflow
-    - run: npm ci
+    - name: Install Dependencies
+      run: npm ci
       working-directory: project/frontend/vite-project
+
     - run: npm run build --if-present
       working-directory: project/frontend/vite-project
     - run: npm test
