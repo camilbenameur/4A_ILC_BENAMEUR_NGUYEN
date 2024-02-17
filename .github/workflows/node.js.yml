@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci --prefix project/frontend/vite-project
-    - run: npm build dev --if-present --prefix project/frontend/vite-project
-    - run: npm test --prefix project/frontend/vite-project
+        working-directory: project/frontend/vite-project
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
