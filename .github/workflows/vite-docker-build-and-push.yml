@@ -1,4 +1,4 @@
-name: Build and Push Frontend Docker Image to dockerhub
+name: Vite Docker Build & Push
 
 on:
   workflow_dispatch:
