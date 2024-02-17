@@ -13,14 +13,14 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.X, 20.x]
+        node-version: [20.11.0]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         path: project/frontend/vite-project
-        
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
