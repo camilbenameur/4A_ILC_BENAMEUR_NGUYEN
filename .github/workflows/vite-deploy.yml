@@ -1,0 +1,55 @@
+name: Deploy Vite Project to GitHub Pages
+
+on:
+  # Runs on pushes targeting the main branch
+  push:
+    branches: ['main']
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper versioning
+          path: project/frontend/vite-project  # Set the path to the Vite project
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.11.0  # Use the specified Node.js version
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+        working-directory: project/frontend/vite-project  # Specify the working directory
+      - name: Build
+        run: npm run build
+        working-directory: project/frontend/vite-project  # Specify the working directory
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: vite-dist  # Set a name for the artifact
+          path: project/frontend/vite-project/dist  # Upload the built files from the correct directory
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: vite-dist  # Specify the artifact to deploy
