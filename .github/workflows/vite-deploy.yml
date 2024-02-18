@@ -31,7 +31,9 @@ jobs:
           path: project/frontend/vite-project  # Set the path to the Vite project
 
       - name: Debugging - List Files
-        run: ls -al
+        run: |
+              cd project/frontend/vite-project
+              ls -al
         working-directory: project/frontend/vite-project  # Specify the working directory
   
       - name: Set NPM_CONFIG_CACHE
@@ -42,7 +44,9 @@ jobs:
         with:
           node-version: 20.11.0  # Use the specified Node.js version
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd project/frontend/vite-project
+          npm install
         working-directory: project/frontend/vite-project
       - name: Build
         run: npm run build
