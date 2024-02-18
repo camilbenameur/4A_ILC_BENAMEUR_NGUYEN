@@ -29,6 +29,10 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for proper versioning
           path: project/frontend/vite-project  # Set the path to the Vite project
+
+      - name: Debugging - List Files
+        run: ls -al
+        working-directory: project/frontend/vite-project  # Specify the working directory
   
       - name: Set NPM_CONFIG_CACHE
         run: export NPM_CONFIG_CACHE=$(npm config get cache)
