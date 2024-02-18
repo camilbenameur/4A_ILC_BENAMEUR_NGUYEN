@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: vite-dist  # Set a name for the artifact
-          path: ./project/frontend/vite-project/dist  # Upload the built files from the correct directory
+          path: './project/frontend/vite-project/dist'  # Upload the built files from the correct directory
           
       - name: Deploy to GitHub Pages
         id: deployment
