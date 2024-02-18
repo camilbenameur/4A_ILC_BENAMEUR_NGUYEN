@@ -35,32 +35,39 @@ jobs:
         working-directory: project/frontend/vite-project  # Specify the working directory
 
       - name: Set NPM_CONFIG_CACHE
-        run: export NPM_CONFIG_CACHE=$(npm config get cache)
+        run: |
+          cd project/frontend/vite-project
+          export NPM_CONFIG_CACHE=$(npm config get cache)
         working-directory: project/frontend/vite-project
       
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20.11.0  # Use the specified Node.js version
+          working-directory: project/frontend/vite-project
           
       - name: Install Dependencies
         run: |
           cd project/frontend/vite-project
           npm install
+        working-directory: project/frontend/vite-project
         
       - name: Build
         run: |
           cd project/frontend/vite-project
           npm run build
+        working-directory: project/frontend/vite-project
         
       - name: Configure Pages
         uses: actions/configure-pages@v3
+        working-directory: project/frontend/vite-project
         
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: vite-dist  # Set a name for the artifact
           path: project/frontend/vite-project/dist  # Upload the built files from the correct directory
+        working-directory: project/frontend/vite-project
           
       - name: Deploy to GitHub Pages
         id: deployment
@@ -68,3 +75,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: vite-dist  # Specify the artifact to deploy
+        working-directory: project/frontend/vite-project
