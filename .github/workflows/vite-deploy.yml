@@ -39,7 +39,7 @@ jobs:
           node-version: 20.11.0  # Use the specified Node.js version
       - name: Install dependencies
         run: |
-          cd project/frontend/vite-project
+          cd ../project/frontend/vite-project
           npm install
       - name: Build
         run: npm run build
