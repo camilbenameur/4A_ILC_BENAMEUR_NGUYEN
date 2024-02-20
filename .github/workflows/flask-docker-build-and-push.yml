@@ -1,0 +1,28 @@
+name: Flask Docker Build & Push
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and Push Backend Docker Image
+      run: |
+        docker buildx create --use
+        docker buildx inspect --bootstrap
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        docker buildx build --platform linux/amd64,linux/arm64 -t camilbenameur/4ailcbenameurnguyen:backend-flask-server -f project/internals/Dockerfile . --push
+      env:
+        DOCKER_CLI_AGGREGATE: 1
+        DOCKER_CLI_EXPERIMENTAL: enabled
