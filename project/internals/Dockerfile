@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
+RUN python -m pip install --upgrade pip
+
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 5000
