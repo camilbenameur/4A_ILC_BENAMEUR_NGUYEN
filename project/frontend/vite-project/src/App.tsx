@@ -5,6 +5,29 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [result, setResult] = useState<string>('');
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setResult(data);
+      } else {
+        setResult('Request failed with status: ' + res.status);
+      }
+    } catch (error) {
+      setResult('An error occurred: ' + (error as Error).message);
+    }
+  };
+
 
   return (
     <>
@@ -19,10 +42,10 @@ function App() {
       <h1>ça marche</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          here is the count : {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Api call : {result} !
         </p>
       </div>
       <p className="read-the-docs">
