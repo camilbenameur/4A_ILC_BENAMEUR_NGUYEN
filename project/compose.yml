@@ -2,12 +2,12 @@ version: '3'
 
 services:
   vite_docker:
-    image: camilbenameur/4ailcbenameurnguyen:frontend-vite-server
+    image: frontend-vite-server
     ports:
       - "5173:5173"
     volumes:
       - "./frontend/vite-project:/srv/app" 
-    container_name: vite_docker
+    container_name: vite-server
     working_dir: /srv/app
 
   flask_server:
