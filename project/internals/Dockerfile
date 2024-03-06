@@ -1,8 +1,8 @@
 FROM python:3.8-slim
 
-WORKDIR /app
+WORKDIR /srv/app
 
-COPY . /app
+COPY . .
 
 RUN python -m pip install --upgrade pip
 
