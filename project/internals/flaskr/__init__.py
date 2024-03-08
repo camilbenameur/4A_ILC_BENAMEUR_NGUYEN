@@ -3,9 +3,13 @@ import json
 from flask import Flask, request, jsonify
 import redis
 from datetime import datetime
+from flask_bcrypt import Bcrypt
+from flask_cors import CORS
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DEBUG=True,
@@ -20,12 +24,55 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    redis_db = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
-
+        
+    redis_db = redis.StrictRedis(host='my_redis', port=6379, db=0, decode_responses=True)
+    bcrypt = Bcrypt(app)
+    
     @app.route('/', methods=['GET'])
     def hello():
         return 'Hello, Flask!'
+    
+    @app.route('/register', methods=['POST'])
+    def register():
+        try:
+            data = request.json
+            email = data.get('email')
+            password = data.get('password')
+
+            if not email or not password:
+                return jsonify({'error': 'Email and password are required'}), 400
+
+            hashed_password = bcrypt.generate_password_hash(password)
+
+            redis_key = f'user:{email}'
+            redis_db.hset(redis_key, 'email', email)
+            redis_db.hset(redis_key, 'password', hashed_password)
+
+            return jsonify({'message': 'User registered successfully'})
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+        
+    @app.route('/signin', methods=['POST'])
+    def signin():
+        try:
+            data = request.json
+            email = data.get('email')
+            password = data.get('password')
+
+            if not email or not password:
+                return jsonify({'error': 'Email and password are required'}), 400
+
+            redis_key = f'user:{email}'
+            stored_password = redis_db.hget(redis_key, 'password')
+
+            if stored_password and bcrypt.check_password_hash(stored_password, password):
+                return jsonify({'message': 'User signed in successfully'})
+            else:
+                return jsonify({'error': 'Invalid email or password'}), 401
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
     
     @app.route('/tweet', methods=['POST'])
     def tweet():
