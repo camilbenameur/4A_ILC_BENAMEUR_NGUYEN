@@ -30,15 +30,44 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
+    console.log(
+      JSON.stringify({
+        'email': email,
+        'password': password,
+      })
+    )
+  
+    try {
+      const response = await fetch('http://localhost:5000/signin', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'email': email,
+          'password': password,
+        }),
+      }); 
+  
+      if (response.ok) {
+        console.log('Signin successful');
+      } else {
+        const errorData = await response.json();
+        console.error('Signin failed:', errorData.error);
+      }
+    } catch (error) {
+      console.error('Error during sign in:', error);
+    }
+  };  
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
