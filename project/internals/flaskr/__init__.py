@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 import redis
 from datetime import datetime
 from flask_bcrypt import Bcrypt
@@ -53,6 +53,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({'error': str(e)}), 500
         
+        
     @app.route('/signin', methods=['POST'])
     def signin():
         try:
@@ -73,6 +74,13 @@ def create_app(test_config=None):
 
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+        
+        
+    @app.route('/logout', methods=['GET'])
+    def logout():
+        session.pop('email', None)
+        return jsonify({'message': 'Logged out successfully'}), 200
+    
     
     @app.route('/tweet', methods=['POST'])
     def tweet():
@@ -92,6 +100,7 @@ def create_app(test_config=None):
             
             for word in message.split():
                 if word.startswith('#'):
+                    word = word[1:]
                     topic_key = f"topic:{word}"
                     redis_db.sadd(topic_key, timestamp)
 
