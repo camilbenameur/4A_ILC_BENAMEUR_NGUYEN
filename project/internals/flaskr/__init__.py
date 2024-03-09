@@ -85,17 +85,17 @@ def create_app(test_config=None):
     @app.route('/tweet', methods=['POST'])
     def tweet():
         data = request.json
-        username = data.get('username')
+        email = data.get('email')
         message = data.get('tweet')
-        if username and message:
+        if email and message:
             tweet = {
-                'author': username,
+                'author': email,
                 'tweet': message
             }
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
             redis_db.set(timestamp, json.dumps(tweet))
             
-            user_key = f"user:{username}"
+            user_key = f"user:{email}"
             redis_db.sadd(user_key, timestamp)
             
             for word in message.split():
@@ -106,15 +106,29 @@ def create_app(test_config=None):
 
             return jsonify({'message': 'Tweeted successfully.'}), 201
         else:
-            return jsonify({'error': 'Missing username or tweet content.'}), 400
+            return jsonify({'error': 'Missing email or tweet content.'}), 400
         
     @app.route('/tweets', methods=['GET'])
     def display_tweets():
-        return jsonify(redis_db.keys())
+        all_keys = redis_db.keys()
+        tweets = []
 
-    @app.route('/user_tweets/<username>', methods=['GET'])
-    def user_tweets(username):
-        user_key = f"user:{username}"
+        for key in all_keys:
+            if not key.startswith("user:"):
+                timestamp = key
+                tweet_json = redis_db.get(timestamp)
+                tweet = {
+                    'timestamp': timestamp,
+                    'user': json.loads(tweet_json)['author'],
+                    'message': json.loads(tweet_json)['tweet']
+                }
+                tweets.append(tweet)
+
+        return jsonify(tweets)
+
+    @app.route('/user_tweets/<email>', methods=['GET'])
+    def user_tweets(email):
+        user_key = f"user:{email}"
         tweet_keys = redis_db.smembers(user_key)
         tweets = [json.loads(redis_db.get(key)) for key in tweet_keys]
         return jsonify(tweets)
