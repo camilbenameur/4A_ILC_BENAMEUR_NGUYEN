@@ -12,7 +12,7 @@ export const getTweets = async () => {
 };
 
 export const postTweet = async (content: string) => {
-  await fetch(`${API_URL}/tweets`, {
+  await fetch(`${API_URL}/tweet`, {
     method: 'POST',
     mode: 'cors',
     headers: {

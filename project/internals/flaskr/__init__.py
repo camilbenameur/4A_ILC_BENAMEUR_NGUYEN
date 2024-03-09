@@ -60,14 +60,19 @@ def create_app(test_config=None):
             data = request.json
             email = data.get('email')
             password = data.get('password')
+            
+
+            
 
             if not email or not password:
                 return jsonify({'error': 'Email and password are required'}), 400
 
             redis_key = f'user:{email}'
             stored_password = redis_db.hget(redis_key, 'password')
+            
 
-            if stored_password and bcrypt.check_password_hash(stored_password, password):
+            if stored_password and bcrypt.check_password_hash(stored_password, password):   
+                session["email"] = email            
                 return jsonify({'message': 'User signed in successfully'})
             else:
                 return jsonify({'error': 'Invalid email or password'}), 401
@@ -85,8 +90,8 @@ def create_app(test_config=None):
     @app.route('/tweet', methods=['POST'])
     def tweet():
         data = request.json
-        email = data.get('email')
-        message = data.get('tweet')
+        email = session.get('email')
+        message = data.get('content')
         if email and message:
             tweet = {
                 'author': email,
@@ -145,5 +150,16 @@ def create_app(test_config=None):
         tweet_keys = redis_db.smembers(topic_key)
         tweets = [json.loads(redis_db.get(key)) for key in tweet_keys]
         return jsonify(tweets)
+    
+    
+    @app.route('/some_route', methods=['GET'])
+    def some_route():
+        # Retrieve the email from the session
+        email = session.get("email")
+
+        if email:
+            return f"The email in the session is: {email}"
+        else:
+            return "No email found in the session"
 
     return app
