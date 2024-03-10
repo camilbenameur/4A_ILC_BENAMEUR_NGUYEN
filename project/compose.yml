@@ -2,7 +2,7 @@ version: '3'
 
 services:
   vite_docker:
-    image: frontend-vite-server
+    image: camilbenameur/4ailcbenameurnguyen:frontend-vite-server
     ports:
       - "5173:5173"
     volumes:
