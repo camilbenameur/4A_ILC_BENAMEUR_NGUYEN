@@ -90,12 +90,12 @@ def create_app(test_config=None):
     @app.route('/tweet', methods=['POST'])
     def tweet():
         data = request.json
-        email = session.get('email')
-        message = data.get('content')
+        email = data.get('email')
+        message = data.get('tweet')
         if email and message:
             tweet = {
-                'author': email,
-                'tweet': message
+                'user': email,
+                'message': message
             }
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
             redis_db.set(timestamp, json.dumps(tweet))
@@ -119,13 +119,14 @@ def create_app(test_config=None):
         tweets = []
 
         for key in all_keys:
-            if not key.startswith("user:"):
+            # Exclude keys related to topics
+            if not key.startswith("user:") and not key.startswith("topic:"):
                 timestamp = key
                 tweet_json = redis_db.get(timestamp)
                 tweet = {
                     'timestamp': timestamp,
-                    'user': json.loads(tweet_json)['author'],
-                    'message': json.loads(tweet_json)['tweet']
+                    'user': json.loads(tweet_json)['user'],
+                    'message': json.loads(tweet_json)['message']
                 }
                 tweets.append(tweet)
 
@@ -135,8 +136,13 @@ def create_app(test_config=None):
     def user_tweets(email):
         user_key = f"user:{email}"
         tweet_keys = redis_db.smembers(user_key)
-        tweets = [json.loads(redis_db.get(key)) for key in tweet_keys]
+        tweets = []
+        for key in tweet_keys:
+            tweet = json.loads(redis_db.get(key))
+            tweet['timestamp'] = key
+            tweets.append(tweet)
         return jsonify(tweets)
+
         
     @app.route('/topics', methods=['GET'])
     def display_topics():
@@ -148,7 +154,11 @@ def create_app(test_config=None):
     def topic_tweets(topic):
         topic_key = f"topic:{topic}"
         tweet_keys = redis_db.smembers(topic_key)
-        tweets = [json.loads(redis_db.get(key)) for key in tweet_keys]
+        tweets = []
+        for key in tweet_keys:
+            tweet = json.loads(redis_db.get(key))
+            tweet['timestamp'] = key
+            tweets.append(tweet)
         return jsonify(tweets)
     
     
