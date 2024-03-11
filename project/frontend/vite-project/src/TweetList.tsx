@@ -13,7 +13,7 @@ interface TweetListProps {
 const TweetList: React.FC<TweetListProps> = ({ tweets }) => {
   return (
     <div>
-      <h1>yooo</h1>
+      
       {tweets.map(tweet => (
         <div key={tweet.timestamp} style={{ border: '1px solid black', padding: '10px', marginBottom: '10px' }}>
           <h3>{tweet.user}</h3>

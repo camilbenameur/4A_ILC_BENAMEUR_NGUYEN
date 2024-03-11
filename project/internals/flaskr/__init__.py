@@ -15,6 +15,7 @@ def create_app(test_config=None):
         DEBUG=True,
     )
 
+
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
     else:
@@ -60,30 +61,27 @@ def create_app(test_config=None):
             data = request.json
             email = data.get('email')
             password = data.get('password')
-            
-
-            
 
             if not email or not password:
                 return jsonify({'error': 'Email and password are required'}), 400
 
             redis_key = f'user:{email}'
             stored_password = redis_db.hget(redis_key, 'password')
-            
 
-            if stored_password and bcrypt.check_password_hash(stored_password, password):   
-                session["email"] = email            
-                return jsonify({'message': 'User signed in successfully'})
+            if stored_password and bcrypt.check_password_hash(stored_password, password):
+                session["email"] = email
+                return jsonify({'message': 'User signed in successfully', 'email': session.get("email")})  # Include email in response
             else:
                 return jsonify({'error': 'Invalid email or password'}), 401
 
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+
         
         
     @app.route('/logout', methods=['GET'])
     def logout():
-        session.pop('email', None)
+        session.clear()
         return jsonify({'message': 'Logged out successfully'}), 200
     
     
@@ -99,15 +97,17 @@ def create_app(test_config=None):
             }
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
             redis_db.set(timestamp, json.dumps(tweet))
-            
-            user_key = f"user:{email}"
-            redis_db.sadd(user_key, timestamp)
-            
+
             for word in message.split():
                 if word.startswith('#'):
                     word = word[1:]
                     topic_key = f"topic:{word}"
                     redis_db.sadd(topic_key, timestamp)
+            
+            user_key = email
+            redis_db.sadd(user_key, timestamp)
+            
+            
 
             return jsonify({'message': 'Tweeted successfully.'}), 201
         else:
@@ -119,22 +119,22 @@ def create_app(test_config=None):
         tweets = []
 
         for key in all_keys:
-            # Exclude keys related to topics
-            if not key.startswith("user:") and not key.startswith("topic:"):
-                timestamp = key
-                tweet_json = redis_db.get(timestamp)
+            # Check if the key consists only of numeric characters
+            if key.isdigit():
+                tweet_json = json.loads(redis_db.get(key))
                 tweet = {
-                    'timestamp': timestamp,
-                    'user': json.loads(tweet_json)['user'],
-                    'message': json.loads(tweet_json)['message']
+                    'timestamp': key,
+                    'user': tweet_json['user'],
+                    'message': tweet_json['message']
                 }
                 tweets.append(tweet)
 
         return jsonify(tweets)
 
+
     @app.route('/user_tweets/<email>', methods=['GET'])
     def user_tweets(email):
-        user_key = f"user:{email}"
+        user_key = email
         tweet_keys = redis_db.smembers(user_key)
         tweets = []
         for key in tweet_keys:
@@ -164,12 +164,6 @@ def create_app(test_config=None):
     
     @app.route('/some_route', methods=['GET'])
     def some_route():
-        # Retrieve the email from the session
-        email = session.get("email")
-
-        if email:
-            return f"The email in the session is: {email}"
-        else:
-            return "No email found in the session"
+        return redis_db.keys()
 
     return app

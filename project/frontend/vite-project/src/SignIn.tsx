@@ -38,6 +38,7 @@ export default function SignIn() {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
+
     console.log(
       JSON.stringify({
         'email': email,
@@ -60,6 +61,8 @@ export default function SignIn() {
   
       if (response.ok) {
         console.log('Signin successful');
+        localStorage.setItem('email', email);
+        window.location.href = 'http://127.0.0.1:5173/home'; 
       } else {
         const errorData = await response.json();
         console.error('Signin failed:', errorData.error);
