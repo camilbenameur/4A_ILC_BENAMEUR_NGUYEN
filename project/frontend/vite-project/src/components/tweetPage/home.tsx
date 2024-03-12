@@ -17,6 +17,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchTopics(); 
+    if (!localStorage.getItem('email')) {
+      window.location.href = 'http://127.0.0.1:5173/signin';    }
   }, []);
 
   useEffect(() => {
@@ -58,6 +60,8 @@ const Home: React.FC = () => {
     try {
       const topicsResponse = await getAllTopics();
       setTopics(topicsResponse); 
+      console.log(topicsResponse)
+
     } catch (error) {
       console.error('Error fetching topics:', error);
     }
