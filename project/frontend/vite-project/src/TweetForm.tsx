@@ -11,6 +11,7 @@ const TweetForm: React.FC = () => {
       console.log(content);
       await postTweet(email, content);
       setContent('');
+      window.location.reload();
     } catch (error) {
       console.error('Error posting tweet:', error);
     }

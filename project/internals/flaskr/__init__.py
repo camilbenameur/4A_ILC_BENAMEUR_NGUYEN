@@ -69,8 +69,7 @@ def create_app(test_config=None):
             stored_password = redis_db.hget(redis_key, 'password')
 
             if stored_password and bcrypt.check_password_hash(stored_password, password):
-                session["email"] = email
-                return jsonify({'message': 'User signed in successfully', 'email': session.get("email")})  # Include email in response
+                return jsonify({'message': 'User signed in successfully', })  
             else:
                 return jsonify({'error': 'Invalid email or password'}), 401
 
@@ -81,7 +80,6 @@ def create_app(test_config=None):
         
     @app.route('/logout', methods=['GET'])
     def logout():
-        session.clear()
         return jsonify({'message': 'Logged out successfully'}), 200
     
     

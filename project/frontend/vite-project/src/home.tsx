@@ -51,6 +51,7 @@ const Home: React.FC = () => {
     } catch (error) {
       console.error('Error fetching tweets:', error);
     }
+    
   };
 
   const fetchTopics = async () => { 
