@@ -103,6 +103,10 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleShowRetweet = async () =>{
+    
+  }
+
   return (
     <div>
       {/* Blue banner */}
@@ -112,7 +116,9 @@ const Home: React.FC = () => {
 
       <div style={{ display: 'flex' }}>
         <div style={{ flex: 1, width: '100vw', borderRight: '1px solid #ccc', padding: '10px' }}>
-      
+        <button onClick={handleShowAllMine}>Show my tweets</button>
+        <button onClick={handleShowRetweet}>Show my retweets</button>
+
         </div>
         <div style={{ flex: 2, width: '100vw', borderRight: '1px solid #ccc', padding: '10px' }}>
          
@@ -133,7 +139,7 @@ const Home: React.FC = () => {
           <div style={{ marginBottom: '10px' }}>
             <button onClick={handleFilterChange}>Filter</button>
             <button onClick={handleShowAll}>Show All</button>
-            <button onClick={handleShowAllMine}>Show my tweets</button>
+            
           </div>
    
           <div>

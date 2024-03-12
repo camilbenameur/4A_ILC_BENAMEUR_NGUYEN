@@ -11,13 +11,18 @@ interface TweetListProps {
 }
 
 const TweetList: React.FC<TweetListProps> = ({ tweets }) => {
+  const handleRetweet = (tweet: Tweet) => {
+    // Implement retweet functionality here
+    console.log("Retweeting:", tweet);
+  };
+
   return (
     <div>
-      
-      {tweets.map(tweet => (
-        <div key={tweet.timestamp} style={{ border: '1px solid black', padding: '10px', marginBottom: '10px' }}>
-          <h3>{tweet.user}</h3>
+      {tweets.map((tweet, index) => (
+        <div key={index} style={{ position: 'relative', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', marginBottom: '10px' }}>
+          <p>{tweet.user}</p>
           <p>{tweet.message}</p>
+          <button onClick={() => handleRetweet(tweet)} style={{ position: 'absolute', bottom: '5px', right: '5px' }}>Retweet</button>
         </div>
       ))}
     </div>

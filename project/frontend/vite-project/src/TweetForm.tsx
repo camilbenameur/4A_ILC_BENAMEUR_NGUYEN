@@ -9,7 +9,7 @@ const TweetForm: React.FC = () => {
     e.preventDefault();
     try {
       console.log(content);
-      await postTweet(email, content); // Pass email along with content to postTweet function
+      await postTweet(email, content);
       setContent('');
     } catch (error) {
       console.error('Error posting tweet:', error);
