@@ -53,24 +53,20 @@ class TweetStore:
         return tweets
 
     def get_user_tweets(self, email: str) -> list:
-        tweet_keys = self.db.smembers(self.user_key(email))
-        tweets = []
-        for key in tweet_keys:
-            tweet_data = self.db.get(key)
-            if tweet_data is not None:
-                tweet = json.loads(tweet_data)
-                tweet["timestamp"] = key
-                tweets.append(tweet)
-        return tweets
+        user_tweets = self.db.keys(
+            pattern = f"user:{email}"
+            )        
+        return user_tweets
 
     def get_topic_tweets(self, topic: str) -> list:
-        tweet_keys = self.db.smembers(self.topic_key(topic))
-        tweets = []
-        for key in tweet_keys:
-            tweet = json.loads(self.db.get(key))
-            tweet["timestamp"] = key
-            tweets.append(tweet)
-        return tweets
+        topic_keys = self.db.smembers(self.topic_key(topic))
+        topic_tweets = []
+        for key in topic_keys:
+            tweet_json = self.db.get(self.tweet_key(key))
+            tweet = json.loads(tweet_json)
+            tweet["timestamp"] = self.tweet_key(key)
+            topic_tweets.append(tweet)
+        return topic_tweets
 
     def get_topics(self) -> list:
         topic_keys = self.db.keys("topic:*")

@@ -20,12 +20,7 @@ def create_tweet():
         return jsonify(tweet.__dict__), 201
     else:
         return jsonify({"error": "Missing email or tweet content."}), 400
-
-
-@tweet.route("/get", methods=["GET"])
-def get_tweets_json():
-    return jsonify(tweet_store.get_tweets()), 200
-
+    
 
 @tweet.route("/get_user_tweets/<email>", methods=["GET"])
 def get_user_tweets(email: str):
@@ -35,9 +30,8 @@ def get_user_tweets(email: str):
         return jsonify({"error": "Missing email"}), 400
 
 
-@tweet.route("/get_topic_tweets", methods=["GET"])
-def get_topic_tweets():
-    topic = request.args.get("topic")
+@tweet.route("/get_topic_tweets/<topic>", methods=["GET"])
+def get_topic_tweets(topic: str):
     if topic:
         return jsonify(tweet_store.get_topic_tweets(topic)), 200
     else:
@@ -52,4 +46,3 @@ def get_tweets():
 @tweet.route("/get_user", methods=["GET"])
 def get_user():
     return jsonify({"user": session.get("user")}), 200
-
