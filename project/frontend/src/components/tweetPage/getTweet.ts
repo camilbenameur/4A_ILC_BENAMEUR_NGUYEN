@@ -1,7 +1,7 @@
 const API_URL = 'http://localhost:5000';
 
 export const getTweets = async () => {
-  const response = await fetch(`${API_URL}/tweets`, {
+  const response = await fetch(`${API_URL}/tweet/get_tweets`, {
     method: 'GET',
     mode: 'cors',
     headers: {
@@ -13,7 +13,7 @@ export const getTweets = async () => {
 
 export const postTweet = async (email: string | null, content: string) => {
   try {
-    const response = await fetch(`${API_URL}/tweet`, {
+    const response = await fetch(`${API_URL}/tweet/post`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -35,7 +35,7 @@ export const postTweet = async (email: string | null, content: string) => {
 };
 
 export const getTweetsUser = async (email: string) => {
-  const response = await fetch(`${API_URL}/user_tweets/${email}`, {
+  const response = await fetch(`${API_URL}/tweet/get_user_tweets/${email}`, {
     method: 'GET',
     mode: 'cors',
     headers: {
@@ -46,7 +46,7 @@ export const getTweetsUser = async (email: string) => {
 };
 
 export const getTweetsTopic = async (topic: string) => {
-  const response = await fetch(`${API_URL}/topic_tweets/${topic}`, {
+  const response = await fetch(`${API_URL}/tweet/get_topic_tweets/${topic}`, {
     method: 'GET',
     mode: 'cors',
     headers: {
@@ -57,7 +57,7 @@ export const getTweetsTopic = async (topic: string) => {
 };
 
 export const getAllTopics = async () => {
-  const response = await fetch(`${API_URL}/topics`, {
+  const response = await fetch(`${API_URL}/topic/get_topics`, {
     method: 'GET',
     mode: 'cors',
     headers: {

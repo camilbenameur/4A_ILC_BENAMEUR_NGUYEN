@@ -33,24 +33,27 @@ export default function SignUp() {
     event.preventDefault();
   
     const formData = new FormData(event.currentTarget);
+    const username = formData.get('username') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     console.log(
       JSON.stringify({
+        'username':username,
         'email': email,
         'password': password,
       })
     )
   
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          'username' : username,
           'email': email,
           'password': password,
         }),

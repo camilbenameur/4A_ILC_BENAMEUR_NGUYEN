@@ -21,10 +21,10 @@ class TweetStore:
         self.db = db
 
     def tweet_key(self, timestamp: str) -> str:
-        return f"tweet:{timestamp}"
+        return timestamp
 
     def user_key(self, email: str) -> str:
-        return f"user:{email}"
+        return email
 
     def topic_key(self, topic: str) -> str:
         return f"topic:{topic}"
@@ -44,19 +44,23 @@ class TweetStore:
         all_keys = self.db.keys()
         tweets = []
         for key in all_keys:
-            if not key.startswith("user:") and not key.startswith("topic:"):
+            if key.isdigit():
                 timestamp = key
                 tweet_json = self.db.get(timestamp)
                 tweet = json.loads(tweet_json)
-                tweet["timestamp"] = timestamp
                 tweets.append(tweet)
         return tweets
 
     def get_user_tweets(self, email: str) -> list:
-        user_tweets = self.db.keys(
-            pattern = f"user:{email}"
-            )        
-        return user_tweets
+        user_key = email
+        tweet_keys = self.db.smembers(user_key)
+        tweets = []
+        for key in tweet_keys:
+            tweet = json.loads(self.db.get(key))
+            tweet['timestamp'] = key
+            tweets.append(tweet)
+             
+        return tweets
 
     def get_topic_tweets(self, topic: str) -> list:
         topic_keys = self.db.smembers(self.topic_key(topic))

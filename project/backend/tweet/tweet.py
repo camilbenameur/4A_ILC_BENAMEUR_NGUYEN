@@ -13,7 +13,7 @@ tweet_store = TweetStore(redis_db)
 def create_tweet():
     data = request.json
     email = data.get("email")
-    message = data.get("message")
+    message = data.get("tweet")
     
     if email and message:
         tweet = tweet_store.create_tweet(email, message)
@@ -46,3 +46,9 @@ def get_tweets():
 @tweet.route("/get_user", methods=["GET"])
 def get_user():
     return jsonify({"user": session.get("user")}), 200
+
+@tweet.route('/a', methods=['GET'])
+def some_route():
+    return redis_db.keys()
+
+    
