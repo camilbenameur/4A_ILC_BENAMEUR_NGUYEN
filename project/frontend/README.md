@@ -3,6 +3,10 @@ Application Tweet
 React a été choisi pour cette application Tweet en raison de sa popularité, de sa facilité de développement et de sa performance. 
 De plus, cela m'a permis de découvrir un nouveau langage qui me paraît plus rigoureux que d'utiliser HTML/CSS/JS.
 
+Pour commencer à naviguer, rentré ce lien : http://127.0.0.1:5173/signin
+
+Il s'agit d'une page de connexion contenant un accès pour créer son compte.
+
 Bienvenue dans l'application Tweet ! Cette application vous permet de publier, afficher et filtrer des tweets en fonction de différents critères.
 Fonctionnalités
 
