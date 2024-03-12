@@ -6,7 +6,7 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - "./frontend/vite-project:/srv/app" 
+      - "./frontend:/srv/app" 
     container_name: vite-server
     working_dir: /srv/app
 
@@ -15,7 +15,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - "./internals/:/srv/app"
+      - "./backend/:/srv/app"
     container_name: flask-server
     working_dir: /srv/app
 

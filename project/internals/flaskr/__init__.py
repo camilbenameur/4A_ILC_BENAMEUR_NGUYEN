@@ -164,7 +164,6 @@ def create_app(test_config=None):
     
     @app.route('/some_route', methods=['GET'])
     def some_route():
-        # Retrieve the email from the session
         email = session.get("email")
 
         if email:
