@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import { Tweet } from "../components/Tweet";
-import { SearchInput } from "../components/SearchInput";
 import { useTweets } from "../hooks/useTweets";
 import { Loader } from "../components/Loader";
 import { UserSearch } from "../components/UserSearch";
@@ -13,7 +12,8 @@ export const User = () => {
     isValidating,
     error,
   } = useTweets({ user: userId });
-  const isError = error !== null;
+  // const isError = error !== null;
+  const isError = false
   if (isLoading && !error) {
     return (
       <div className="p-4">
@@ -40,7 +40,10 @@ export const User = () => {
 
   return (
     <>
-      <UserSearch />
+      {userId !== localStorage.getItem("email") && (
+        <UserSearch />
+      )}
+      
       {isError && (
         <div className="p-4 text-center text-red-500">
           Error fetching tweets
