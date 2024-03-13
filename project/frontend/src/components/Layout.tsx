@@ -10,7 +10,7 @@ export const Layout = () => {
     },
     {
       name: "Profile",
-      path: "/me",
+      path: `/user/${localStorage.getItem("email")}`,
     },
   ];
 
