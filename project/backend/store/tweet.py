@@ -22,6 +22,17 @@ class Tweet:
         self.user = user
         self.message = message
 
+class Retweet:
+    timestamp : str
+    user: str
+    message: str
+    post_email: str
+
+    def __init__(self, timestamp : str, user: str, message: str, post_email):
+        self.timestamp = timestamp
+        self.user = user
+        self.message = message
+        self.post_email = post_email
 
 class TweetStore:
     db: Redis
