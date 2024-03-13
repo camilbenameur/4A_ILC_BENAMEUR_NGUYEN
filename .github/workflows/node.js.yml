@@ -3,10 +3,9 @@ name: Vite CI
 on:
   push:
     branches:
-      - main
-      - camilbenameur/refactor-api
+      - dev
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 jobs:
   build:
