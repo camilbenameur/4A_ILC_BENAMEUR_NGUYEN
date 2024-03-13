@@ -1,23 +1,23 @@
 # Projet
 
-Ce projet est composé de trois parties : frontend, backend et project.
+Ce projet est composé de deux parties : frontend et backend.
 
 ## Frontend
 
-Le frontend est développé avec [Vite](https://vitejs.dev/), un outil de développement rapide pour les applications web modernes en Vue.js.
+Le frontend est développé avec [Vite](https://vitejs.dev/), un outil de développement rapide pour les applications web modernes en React.
 
 ### Installation des dépendances
 
 ```bash
-cd frontend
+cd project/frontend
 npm install
 ```
 
 ### Construction de l'image Docker
 
 ```bash
-cd frontend
-docker build -t vite-server .
+cd project/frontend
+docker build -t frontend-vite-server .
 ```
 
 ## Backend
@@ -35,17 +35,15 @@ docker build -t flask-server .
 
 Ce répertoire contient des configurations pour exécuter le projet à l'aide de Docker Compose.
 
-### Exécution de Redis en tant que conteneur Docker
-
-```bash
-docker run --name myredis --rm -p 6379:6379 redis
-```
-
 ### Exécution du projet avec Docker Compose
 
 ```bash
 docker-compose up
 ```
+
+### Forward le port 3000
+
+Dans votre IDE il faut forward le port 127.0.0.1:3000.
 
 Après avoir démarré les conteneurs Docker, vous pouvez accéder à l'expérience à l'URL suivante :
 

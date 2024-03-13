@@ -7,17 +7,18 @@ L'application utilise Flask comme framework backend et Redis comme base de donn�
 
 Le backend est organisé en plusieurs dossiers, chacun avec ses propres fonctionnalités :
 
-- **auth**: Contient les routes et la logique pour l'authentification des utilisateurs.
-  - **auth.py**: Gestion des routes d'authentification, telles que l'inscription, la connexion et la déconnexion.
 - **redis_db**: Gère la connexion à la base de données Redis.
 - **store**: Contient les classes et les méthodes pour la gestion des utilisateurs, des tweets et des sujets.
   - **topic.py**: Gestion des sujets.
   - **tweet.py**: Gestion des tweets.
   - **user.py**: Gestion des utilisateurs.
+- **auth**: Fournit les routes et la logique pour l'authentification des utilisateurs.
 - **topic**: Fournit les routes pour la récupération des sujets.
 - **tweet**: Fournit les routes pour la création et la récupération des tweets.
 
-
+L'utilisation de blueprints nous permet d'avoir une api plus modulable.
+L'utilisation du factory permet de déclaret plusieurs instances de l'application flask afin d'y charger différentes configurations de test ou autre.
+L'utilisation d'un store permet d'isoler toutes manipulations de la base de données du reste de la logique de nos routes.
 
 ## Routes Principales
 

@@ -6,13 +6,13 @@ Ce projet représente le frontend d'un réseau social basé sur React. Il permet
 ## Choix de langage
 
 React a été choisi pour cette application Tweet en raison de sa popularité, de sa facilité de développement et de sa performance. 
-De plus, cela m'a permis de découvrir un nouveau langage qui me paraît plus rigoureux que d'utiliser HTML/CSS/JS.
 
 ## Fonctionnalités principales
 
 - Affichage de la timeline des tweets
 - Recherche de profils utilisateur
 - Affichage des sujets populaires
+- Affichage des tweets associés a un sujet
 - Publication de nouveaux tweets
 - Navigation entre les pages de profil utilisateur et la timeline principale
 
