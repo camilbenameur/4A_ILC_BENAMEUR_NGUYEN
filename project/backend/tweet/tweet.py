@@ -33,8 +33,6 @@ def get_tweets():
     if topic:
         tweets = tweet_store.get_topic_tweets(topic)
         return jsonify(tweets), 200
-
-    print(tweet_store.get_tweets())
     return jsonify(tweet_store.get_tweets()), 200
 
 

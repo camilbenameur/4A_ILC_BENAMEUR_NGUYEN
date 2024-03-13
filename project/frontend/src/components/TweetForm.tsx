@@ -20,10 +20,10 @@ export const postTweet = async (email: string | null, content: string) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error);
+      console.error("Error:", errorData.error);
     }
   } catch (error) {
-    throw error;
+    console.error("Fetch Error:", error);
   }
 };
 

@@ -16,6 +16,8 @@ export const getTweets = async (
   } else if (options.user) {
     query = `?user=${options.user}`;
   }
+
+  console.log(`${API_URL}/tweets${query}`)
   const response = await fetch(`${API_URL}/tweets${query}`, {
     method: 'GET',
     headers: {

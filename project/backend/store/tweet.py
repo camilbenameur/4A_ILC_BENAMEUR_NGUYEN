@@ -50,17 +50,24 @@ class TweetStore:
         return tweet
 
     def get_tweets(self) -> list:
-        all_keys = self.db.keys(pattern="tweet:*")
-        return self.get_multiple_tweets(all_keys)
+        tweet_keys = self.db.keys(pattern="tweet:*")
+        tweet_ids = [tweet_key.replace("tweet:", "") for tweet_key in tweet_keys]
+        return self.get_multiple_tweets(tweet_ids)
 
     def get_multiple_tweets(self, tweet_ids: list) -> list:
         tweets = []
         for tweet_id in tweet_ids:
             tweet_json = self.db.get(self.tweet_key(tweet_id))
-            tweet = json.loads(tweet_json)
-            tweet["id"] = self.tweet_key(tweet_id)
-            tweets.append(tweet)
-        return sorted(tweets, key=lambda tweet: tweet["timestamp"], reverse=True)
+            if tweet_json is not None:
+                try:
+                    tweet = json.loads(tweet_json)
+                    tweet["id"] = self.tweet_key(tweet_id)
+                    tweets.append(tweet)
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON for tweet {tweet_id}: {e}")
+            else:
+                print(f"Tweet {tweet_id} not found in the database.")
+        return sorted(tweets, key=lambda tweet: tweet.get("timestamp", 0), reverse=True)
 
     def get_user_tweets(self, email: str) -> list:
         user_key = email
