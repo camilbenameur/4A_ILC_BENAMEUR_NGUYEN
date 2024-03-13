@@ -4,12 +4,21 @@ import uuid
 import json
 from datetime import datetime
 
+from store.user import UserStore
+
 
 class Tweet:
     user: str
     message: str
+    timestamp: str
+    id: str
 
-    def __init__(self, user: str, message: str):
+    def __init__(self, user: str, message: str, id: str = None, timestamp: str = None):
+        if not id:
+            self.id = str(uuid.uuid4())
+        if not timestamp:
+            self.timestamp = datetime.now().__str__()
+
         self.user = user
         self.message = message
 
@@ -19,9 +28,10 @@ class TweetStore:
 
     def __init__(self, db: Redis):
         self.db = db
+        self.user_store = UserStore(db)
 
-    def tweet_key(self, timestamp: str) -> str:
-        return timestamp
+    def tweet_key(self, id: str) -> str:
+        return f"tweet:{id}"
 
     def user_key(self, email: str) -> str:
         return email
@@ -31,46 +41,35 @@ class TweetStore:
 
     def create_tweet(self, email: str, message: str) -> Tweet:
         tweet = Tweet(email, message)
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        self.db.set(self.tweet_key(timestamp), json.dumps(tweet.__dict__))
-        self.db.sadd(self.user_key(email), timestamp)
+        self.db.set(self.tweet_key(tweet.id), json.dumps(tweet.__dict__))
+        self.db.sadd(self.user_key(email), tweet.id)
         for word in message.split():
             if word.startswith("#"):
                 word = word[1:]
-                self.db.sadd(self.topic_key(word), timestamp)
+                self.db.sadd(self.topic_key(word), tweet.id)
         return tweet
 
     def get_tweets(self) -> list:
-        all_keys = self.db.keys()
+        all_keys = self.db.keys(pattern="tweet:*")
+        return self.get_multiple_tweets(all_keys)
+
+    def get_multiple_tweets(self, tweet_ids: list) -> list:
         tweets = []
-        for key in all_keys:
-            if key.isdigit():
-                timestamp = key
-                tweet_json = self.db.get(timestamp)
-                tweet = json.loads(tweet_json)
-                tweets.append(tweet)
-        return tweets
+        for tweet_id in tweet_ids:
+            tweet_json = self.db.get(self.tweet_key(tweet_id))
+            tweet = json.loads(tweet_json)
+            tweet["id"] = self.tweet_key(tweet_id)
+            tweets.append(tweet)
+        return sorted(tweets, key=lambda tweet: tweet["timestamp"], reverse=True)
 
     def get_user_tweets(self, email: str) -> list:
         user_key = email
         tweet_keys = self.db.smembers(user_key)
-        tweets = []
-        for key in tweet_keys:
-            tweet = json.loads(self.db.get(key))
-            tweet['timestamp'] = key
-            tweets.append(tweet)
-             
-        return tweets
+        return self.get_multiple_tweets(tweet_keys)
 
     def get_topic_tweets(self, topic: str) -> list:
         topic_keys = self.db.smembers(self.topic_key(topic))
-        topic_tweets = []
-        for key in topic_keys:
-            tweet_json = self.db.get(self.tweet_key(key))
-            tweet = json.loads(tweet_json)
-            tweet["timestamp"] = self.tweet_key(key)
-            topic_tweets.append(tweet)
-        return topic_tweets
+        return self.get_multiple_tweets(topic_keys)
 
     def get_topics(self) -> list:
         topic_keys = self.db.keys("topic:*")

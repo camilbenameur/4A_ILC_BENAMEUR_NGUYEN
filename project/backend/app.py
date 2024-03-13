@@ -7,18 +7,9 @@ from tweet import tweet
 from topic import topic
 
 
-"""
-user:{username} -> Hmap(password)
-user_tweet:{username} -> Set(tweet_id)
-tweet:{tweet_id} -> Hmap(author, tweet)
-topic:{topic} -> Set(tweet_id)
-
-"""
-
-
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    CORS(app)
+    CORS(app, origins=["*"])
     app.config.from_mapping(
         SECRET_KEY="dev",
         DEBUG=True,

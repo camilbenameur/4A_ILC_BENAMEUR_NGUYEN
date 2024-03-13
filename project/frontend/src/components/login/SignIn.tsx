@@ -47,7 +47,7 @@ export default function SignIn() {
     )
   
     try {
-      const response = await fetch('http://localhost:5000/auth/signin', {
+      const response = await fetch('http://localhost:3000/auth/signin', {
         method: 'POST',
         mode: 'cors',
         headers: {

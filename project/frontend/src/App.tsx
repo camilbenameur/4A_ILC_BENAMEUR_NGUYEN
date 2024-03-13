@@ -1,22 +1,25 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css'
 import SignIn from './components/login/SignIn'
 import SignUp from './components/login/SignUp'
-import Home from './components/tweetPage/home';
+import { Home } from './pages/Home';
+import { Layout } from './components/Layout';
+import { User } from './pages/User';
 
 function App() {
-  
+
 
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/signin" element={<SignIn/>} />
-          <Route path="/signup" element={<SignUp/>} />
-          <Route path="/home" element={<Home/>} />
+          <Route element={<Layout />} >
+            <Route path="/user/:userId" element={<User />} />
+            <Route path="/" element={<Home />} />
+          </Route>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
-      </Router>
+      </Router >
     </>
   )
 }
