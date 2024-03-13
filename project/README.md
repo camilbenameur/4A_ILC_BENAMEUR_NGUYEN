@@ -1,7 +1,6 @@
 # Projet
 
-Ce projet est composé de trois parties : frontend, backend et project.
-
+Ce projet est composé de deux parties : frontend et backend
 ## Frontend
 
 Le frontend est développé avec [Vite](https://vitejs.dev/), un outil de développement rapide pour les applications web modernes en Vue.js.
