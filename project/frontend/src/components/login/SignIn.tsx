@@ -62,7 +62,7 @@ export default function SignIn() {
       if (response.ok) {
         console.log('Signin successful');
         localStorage.setItem('email', email);
-        window.location.href = 'http://127.0.0.1:5173/home'; 
+        window.location.href = 'http://127.0.0.1:5173/'; 
       } else {
         const errorData = await response.json();
         console.error('Signin failed:', errorData.error);
