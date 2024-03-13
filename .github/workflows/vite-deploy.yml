@@ -3,7 +3,7 @@ name: Deploy Vite Project to GitHub Pages
 on:
   # Runs on pushes targeting the main branch
   push:
-    branches: ['main']
+    branches: ['dev']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,35 +28,35 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Fetch all history for proper versioning
-          path: project/frontend/vite-project  # Set the path to the Vite project
+          path: project/frontend  # Set the path to the Vite project
   
       - name: Debugging - List Files
         run: ls -al
-        working-directory: project/frontend/vite-project  # Specify the working directory
+        working-directory: project/frontend  # Specify the working directory
 
       - name: Set NPM_CONFIG_CACHE
         run: |
-          cd project/frontend/vite-project
+          cd project/frontend
           export NPM_CONFIG_CACHE=$(npm config get cache)
-        working-directory: project/frontend/vite-project
+        working-directory: project/frontend
       
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20.11.0  # Use the specified Node.js version
-          working-directory: project/frontend/vite-project
+          working-directory: project/frontend
           
       - name: Install Dependencies
         run: |
-          cd project/frontend/vite-project
+          cd project/frontend
           npm install
-        working-directory: project/frontend/vite-project
+        working-directory: project/frontend
         
       - name: Build
         run: |
-          cd project/frontend/vite-project
+          cd project/frontend
           npm run build
-        working-directory: project/frontend/vite-project
+        working-directory: project/frontend
         
       - name: Configure Pages
         uses: actions/configure-pages@v3
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: vite-dist  # Set a name for the artifact
-          path: './project/frontend/vite-project/dist'  # Upload the built files from the correct directory
+          path: './project/frontend/dist'  # Upload the built files from the correct directory
           
       - name: Deploy to GitHub Pages
         id: deployment
