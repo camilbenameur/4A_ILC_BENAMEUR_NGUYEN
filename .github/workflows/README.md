@@ -68,3 +68,14 @@ Ce flux de travail construit l'image Docker du frontend Vite et la pousse vers D
 1. **Checkout Repository**: Récupère le code source du dépôt GitHub.
 2. **Set up Docker Buildx**: Configure Buildx pour construire des images multi-plateformes.
 3. **Build and Push Frontend Docker Image**: Construit l'image Docker du frontend Vite et la pousse vers Docker Hub.
+
+## Problèmes rencontrés
+
+Nous avons rencontré plusieurs difficultés lors de la configuration et de l'exécution des workflows GitHub pour notre projet Twitter Clone :
+
+- **Installation des dépendances dans les runners :** Nous avons rencontré des problèmes lors de l'installation des dépendances Python et Node.js dans les runners GitHub Actions. Malgré plusieurs tentatives et ajustements, certaines dépendances ne se sont pas installées correctement, ce qui a entraîné des erreurs lors de l'exécution des workflows.
+
+- **Impact des commandes d'installation sur les Docker Build and Push :** Nous avons remarqué que l'exécution des commandes `pip install` et `npm install` dans les workflows avait un impact sur les Docker Build and Push. Lorsque nous avons retiré ces commandes d'installation, les Docker Build and Push se sont déroulés avec succès.
+
+- **Problème avec la mise en ligne statique sur GitHub Pages :** Bien que nous ayons réussi à construire les fichiers statiques de notre application frontend et à les télécharger en tant qu'artefacts d'action, nous avons rencontré des difficultés pour les lier correctement à notre déploiement sur GitHub Pages. Malgré nos efforts pour associer les artefacts à notre répertoire `dist`, nous n'avons pas pu réaliser la mise en ligne statique de l'application avec succès.
+
